@@ -11,8 +11,26 @@ const DEFAULT_STATE = {
   filter: '',
 };
 
+const LS_KEY = 'contacts';
+
 export default class App extends Component {
   state = DEFAULT_STATE;
+
+  componentDidMount() {
+    const dataFromLS = JSON.parse(localStorage.getItem(LS_KEY));
+
+    if (dataFromLS) {
+      this.setState(() => ({
+        contacts: dataFromLS
+      }));
+    }
+  }
+
+  componentDidUpdate() {
+    this.state.contacts.length !== 0 ?
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts))
+      : localStorage.removeItem(LS_KEY);
+  }
 
   addSumbitHandler = ({ name, number }) => {
     const contact = {
